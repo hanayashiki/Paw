@@ -1,42 +1,28 @@
+// filepath: /Users/chenyuwang/paw/paw/src/renderer/src/components/ImageNoteComponent.tsx
 import { Flex, IconButton, TextField } from '@radix-ui/themes'
-import { TextNote } from 'src/shared/models'
-import CodeMirror, { EditorView } from '@uiw/react-codemirror'
-import { markdown } from '@codemirror/lang-markdown'
+import { ImageNote } from 'src/shared/models'
 import { useEffect, useState } from 'react'
 import { Resizable } from 're-resizable'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import { ipc } from '@renderer/lib/ipc'
 import { store } from '@renderer/lib/store'
 
-export type TextNoteComponentProps = {
-  note: TextNote
+export type ImageNoteComponentProps = {
+  note: ImageNote
 }
 
-const theme = EditorView.theme(
-  {
-    '&': {
-      fontSize: '10pt'
-    },
-    'cm-theme': {
-      height: '100%'
-    },
-    '&.cm-editor': {
-      height: '100%'
-    }
-  },
-  {
-    dark: true
-  }
-)
-
-export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) => {
+export const ImageNoteComponent: React.FC<ImageNoteComponentProps> = ({ note }) => {
   const [localNote, setLocalNote] = useState(note)
+  const [focused, setFocused] = useState(false)
 
   useEffect(() => {
-    ipc.saveTextNote(localNote)
+    ipc.saveImageNote(localNote)
   }, [localNote])
 
-  const [focused, setFocused] = useState(false)
+  const handleImageClick = (): void => {
+    // Open the image in macOS Preview app
+    ipc.openImageInPreview(localNote.imagePath)
+  }
 
   return (
     <Flex direction="column" gap="4">
@@ -54,10 +40,9 @@ export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) =>
       >
         <TextField.Root
           size="2"
-          placeholder="Untitled Note"
+          placeholder="Untitled Image"
           value={localNote.title}
           style={{ flexGrow: 1 }}
-          autoFocus
           onChange={(ev) => {
             setLocalNote((n) =>
               ev.target.value === n.title ? n : { ...n, title: ev.target.value }
@@ -77,10 +62,8 @@ export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) =>
 
       <Resizable
         defaultSize={{
-          height: note.height
-        }}
-        enable={{
-          bottom: true
+          height: note.height,
+          width: '100%'
         }}
         onResizeStop={(_ev, _d, el) => {
           setLocalNote((n) => ({
@@ -88,20 +71,24 @@ export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) =>
             height: el.getBoundingClientRect().height
           }))
         }}
-        style={{ paddingBottom: 16, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
+        style={{
+          borderRadius: '4px',
+          overflow: 'hidden',
+          paddingBottom: 16,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        }}
       >
-        <CodeMirror
-          value={localNote.content}
-          basicSetup={{
-            lineNumbers: false,
-            highlightActiveLine: false,
-            highlightActiveLineGutter: false
+        <img
+          src={`file://${localNote.imagePath}`}
+          alt={localNote.title || 'Image note'}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            cursor: 'pointer',
+            display: 'block'
           }}
-          extensions={[EditorView.lineWrapping, markdown()]}
-          theme={theme}
-          onChange={(value) => {
-            setLocalNote((n) => (value === n.content ? n : { ...n, content: value }))
-          }}
+          onClick={handleImageClick}
         />
       </Resizable>
     </Flex>

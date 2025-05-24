@@ -13,7 +13,7 @@ export type TextNote = BaseNote & {
 
 export type ImageNote = BaseNote & {
   type: 'image'
-  imageUrl: string
+  imagePath: string
 }
 
 export type Note = TextNote | ImageNote

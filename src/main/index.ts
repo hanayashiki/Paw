@@ -80,6 +80,9 @@ function createWindow(): void {
     ...dbInterface,
     async hideWindow() {
       mainWindow.hide()
+    },
+    async openImageInPreview(imagePath: string) {
+      shell.openPath(imagePath)
     }
   }
 
@@ -91,7 +94,7 @@ function createWindow(): void {
   })
   mainWindow.once('ready-to-show', () => {
     showWindowBelowTray()
-  });
+  })
 }
 
 // This method will be called when Electron has finished
