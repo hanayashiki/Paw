@@ -39,7 +39,7 @@ export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) =>
   const [focused, setFocused] = useState(false)
 
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="2">
       <Flex
         direction="row"
         align="center"
@@ -88,7 +88,7 @@ export const TextNoteComponent: React.FC<TextNoteComponentProps> = ({ note }) =>
             height: el.getBoundingClientRect().height
           }))
         }}
-        style={{ paddingBottom: 16, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
+        style={{ paddingBottom: 8, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
       >
         <CodeMirror
           value={localNote.content}

@@ -118,7 +118,7 @@ function App(): React.JSX.Element {
 
       <AddImageButton />
 
-      <Flex direction="column" gap="4" flexGrow="1" flexShrink="1" overflow="auto">
+      <Flex mt="3" direction="column" gap="4" flexGrow="1" flexShrink="1" overflow="auto">
         {match(notes)
           .with({ status: 'success' }, ({ data }) => {
             return data.map((note) =>

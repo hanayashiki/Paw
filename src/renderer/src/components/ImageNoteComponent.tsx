@@ -25,7 +25,7 @@ export const ImageNoteComponent: React.FC<ImageNoteComponentProps> = ({ note }) 
   }
 
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="2">
       <Flex
         direction="row"
         align="center"
@@ -74,7 +74,7 @@ export const ImageNoteComponent: React.FC<ImageNoteComponentProps> = ({ note }) 
         style={{
           borderRadius: '4px',
           overflow: 'hidden',
-          paddingBottom: 16,
+          paddingBottom: 8,
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
         }}
       >
