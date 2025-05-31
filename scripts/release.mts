@@ -1,5 +1,3 @@
-#!/usr/bin/env npx tsx
-
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { execa } from 'execa'
 import * as readline from 'readline'
@@ -66,7 +64,7 @@ class ReleaseManager {
 
   private async getLastCommitMessage(): Promise<string> {
     try {
-      const lastCommit = await execa`git log -1 --pretty=format:"%s"`
+      const lastCommit = await execa`git log -1 --pretty=format:%s`
       return lastCommit.stdout.trim()
     } catch {
       this.log('Could not get last commit message', 'error')

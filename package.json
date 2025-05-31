@@ -21,7 +21,7 @@
     "build:mac": "electron-vite build && electron-builder --universal",
     "build:linux": "electron-vite build && electron-builder --linux",
     "prepare": "husky",
-    "release": "dotenvy -f .env.sign node scripts/release.ts"
+    "release": "dotenvy -f .env.sign node scripts/release.mts"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.3.2",
