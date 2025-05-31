@@ -1,3 +1,6 @@
+## 1.0.9
+add icons to menu
+
 ## 1.0.8
 add right menu for seaching and asking ai
 
