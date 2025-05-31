@@ -1,3 +1,6 @@
+## 1.0.5
+allow user to resize the app
+
 ## 1.0.2
 allow user to resize the app
 
