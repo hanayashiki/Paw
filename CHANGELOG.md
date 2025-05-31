@@ -1,3 +1,6 @@
+## 1.1.0
+tray icon naming and color for dark/light mode
+
 ## 1.0.9
 add icons to menu
 
