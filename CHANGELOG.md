@@ -1,3 +1,6 @@
+## 1.0.7
+Allow repositioning the window with menu click
+
 ## 1.0.6
 upgrade the release system
 
