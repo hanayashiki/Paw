@@ -1,3 +1,6 @@
+## 1.1.2
+fix: app in whitescreen
+
 ## 1.1.1
 fix: use execa to smooth release script
 

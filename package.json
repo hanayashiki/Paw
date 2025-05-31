@@ -1,7 +1,6 @@
 {
   "name": "paw",
-  "type": "module",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -22,7 +21,7 @@
     "build:mac": "electron-vite build && electron-builder --universal",
     "build:linux": "electron-vite build && electron-builder --linux",
     "prepare": "husky",
-    "release": "dotenvy -f .env.sign tsx scripts/release.ts"
+    "release": "dotenvy -f .env.sign node scripts/release.ts"
   },
   "dependencies": {
     "@codemirror/lang-markdown": "^6.3.2",
