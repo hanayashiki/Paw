@@ -13,6 +13,7 @@
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
+    "dev:website": "sirv -D ./website",
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
@@ -31,6 +32,7 @@
     "@uiw/react-codemirror": "^4.23.12",
     "re-resizable": "^6.11.2",
     "remeda": "^2.22.1",
+    "sirv-cli": "^3.0.1",
     "ts-pattern": "^5.7.1"
   },
   "devDependencies": {
