@@ -1,8 +1,5 @@
-## 1.0.5
-allow user to resize the app
-
-## 1.0.2
-allow user to resize the app
+## 1.0.6
+upgrade the release system
 
 ## 1.0.2
 Allow user to resize window
