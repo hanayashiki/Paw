@@ -2,7 +2,10 @@ import { app, shell, screen, BrowserWindow, ipcMain, Tray, Menu } from 'electron
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import trayIcon from '../../resources/tray-icon.png?asset'
+/**
+ * Magic name with "Template" suffix to make macOS use it as template image
+ */
+import trayIcon from '../../resources/trayTemplate.png?asset'
 import { IPCInterface } from '../shared/IPCInterface'
 import { dbInterface, loadDb } from './db'
 
