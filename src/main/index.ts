@@ -6,17 +6,15 @@ import trayIcon from '../../resources/tray-icon.png?asset'
 import { IPCInterface } from '../shared/IPCInterface'
 import { dbInterface, loadDb } from './db'
 
-const WINDOW_WIDTH = 300
-const WINDOW_HEIGHT = 800
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT,
+    width: 300,
+    height: 800,
     show: false,
     frame: false,
-    resizable: false,
+    resizable: true,
     type: 'panel',
     skipTaskbar: true,
     autoHideMenuBar: true,
@@ -51,15 +49,17 @@ function createWindow(): void {
     const primaryDisplay = screen.getPrimaryDisplay()
     const screenBounds = primaryDisplay.workArea // 不包括菜单栏和 Dock
 
-    const x = Math.round(trayBounds.x + trayBounds.width / 2 - WINDOW_WIDTH / 2)
+    const { width: windowWidth, height: windowHeight } = mainWindow.getBounds()
+
+    const x = Math.round(trayBounds.x + trayBounds.width / 2 - windowWidth / 2)
     const y = Math.round(trayBounds.y + trayBounds.height)
 
     // 限制在屏幕范围内（可选）
     const finalX = Math.max(
       screenBounds.x,
-      Math.min(x, screenBounds.x + screenBounds.width - WINDOW_WIDTH)
+      Math.min(x, screenBounds.x + screenBounds.width - windowWidth)
     )
-    const finalY = Math.min(screenBounds.y + screenBounds.height - WINDOW_HEIGHT, y)
+    const finalY = Math.min(screenBounds.y + screenBounds.height - windowHeight, y)
 
     mainWindow.setPosition(finalX, finalY, false)
     mainWindow.showInactive()
