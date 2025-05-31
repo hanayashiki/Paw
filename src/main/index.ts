@@ -6,7 +6,6 @@ import trayIcon from '../../resources/tray-icon.png?asset'
 import { IPCInterface } from '../shared/IPCInterface'
 import { dbInterface, loadDb } from './db'
 
-
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -34,7 +33,24 @@ function createWindow(): void {
   tray.on('right-click', () => {
     const menu = Menu.buildFromTemplate([
       {
+        label: 'Reposition Window',
+        click: () => {
+          mainWindow.setSize(300, 800, false)
+          showWindowBelowTray()
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Quit',
+        click: () => {
+          app.quit()
+        }
+      },
+      {
+        label: `Paw ${app.getVersion()}`,
+        enabled: false,
         click: () => {
           app.quit()
         }
