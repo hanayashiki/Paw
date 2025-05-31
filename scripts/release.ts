@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 
 import { readFileSync, writeFileSync, existsSync } from 'fs'
-import { execSync } from 'child_process'
+import { execa } from 'execa'
 import * as readline from 'readline'
 import { tmpdir } from 'os'
 import { join } from 'path'
@@ -64,6 +64,16 @@ class ReleaseManager {
     return false // versions are equal
   }
 
+  private async getLastCommitMessage(): Promise<string> {
+    try {
+      const lastCommit = await execa`git log -1 --pretty=format:"%s"`
+      return lastCommit.stdout.trim()
+    } catch {
+      this.log('Could not get last commit message', 'error')
+      return ''
+    }
+  }
+
   private updatePackageJson(): void {
     this.log(`Updating package.json version from ${this.currentVersion} to ${this.newVersion}`)
 
@@ -112,17 +122,16 @@ class ReleaseManager {
     this.log('Website updated successfully', 'success')
   }
 
-  private runBuild(): void {
+  private async runBuild(): Promise<void> {
     this.log('Building application for macOS...')
 
     try {
       // Set AWS profile for the build process
-      process.env.AWS_PROFILE = 'wcy'
-
-      execSync('npm run build:mac', {
-        stdio: 'inherit',
+      await execa({
+        stdout: 'inherit',
+        stderr: 'inherit',
         env: { ...process.env, AWS_PROFILE: 'wcy' }
-      })
+      })`npm run build:mac`
 
       this.log('Build completed successfully', 'success')
     } catch (error) {
@@ -131,7 +140,7 @@ class ReleaseManager {
     }
   }
 
-  private uploadToS3(): void {
+  private async uploadToS3(): Promise<void> {
     this.log('Uploading build to S3...')
 
     const artifactPath = `dist/paw-${this.newVersion}.dmg`
@@ -142,12 +151,10 @@ class ReleaseManager {
     }
 
     try {
-      const s3Command = `aws s3 cp "${artifactPath}" "s3://paw-cwang-io/paw-${this.newVersion}.dmg"`
-
-      execSync(s3Command, {
+      await execa({
         stdio: 'inherit',
         env: { ...process.env, AWS_PROFILE: 'wcy' }
-      })
+      })`aws s3 cp ${artifactPath} ${'s3://paw-cwang-io/paw-' + this.newVersion + '.dmg'}`
 
       this.log(`Successfully uploaded ${artifactPath} to S3`, 'success')
     } catch (error) {
@@ -156,12 +163,12 @@ class ReleaseManager {
     }
   }
 
-  private commitAndTag(): void {
+  private async commitAndTag(): Promise<void> {
     this.log('Committing changes and creating tag...')
 
     try {
       // Add all changes
-      execSync('git add package.json CHANGELOG.md website/index.html')
+      await execa`git add package.json CHANGELOG.md website/index.html`
 
       // Commit with release message
       const commitMessage = `chore: release v${this.newVersion}\n\n${this.releaseInfo}`
@@ -169,10 +176,10 @@ class ReleaseManager {
       const temporaryCommitMessagePath = join(tmpdir(), 'commit-msg.txt')
       writeFileSync(temporaryCommitMessagePath, commitMessage)
 
-      execSync(`git commit -F "${temporaryCommitMessagePath}"`)
+      await execa`git commit -F ${temporaryCommitMessagePath}`
 
       // Create tag
-      execSync(`git tag -a v${this.newVersion} -m "Release v${this.newVersion}"`)
+      await execa`git tag -a ${'v' + this.newVersion} -m ${'Release v' + this.newVersion}`
 
       this.log(`Committed changes and created tag v${this.newVersion}`, 'success')
     } catch (error) {
@@ -205,8 +212,19 @@ class ReleaseManager {
     }
 
     // Get release information
+    const lastCommitMessage = await this.getLastCommitMessage()
+    const defaultPrompt = lastCommitMessage
+      ? `Enter release information (what changed?) (${lastCommitMessage}): `
+      : 'Enter release information (what changed?): '
+
     while (!this.releaseInfo) {
-      const info = await this.prompt('Enter release information (what changed?): ')
+      const info = await this.prompt(defaultPrompt)
+
+      if (!info.trim() && lastCommitMessage) {
+        // Use last commit message if user hits enter without typing
+        this.releaseInfo = lastCommitMessage
+        break
+      }
 
       if (!info.trim()) {
         this.log('Release information is required', 'error')
@@ -242,11 +260,12 @@ class ReleaseManager {
       this.updateWebsite()
 
       // Build and upload
-      this.runBuild()
-      this.uploadToS3()
+
+      await this.runBuild()
+      await this.uploadToS3()
 
       // Commit and tag
-      this.commitAndTag()
+      await this.commitAndTag()
 
       this.log(`🎉 Release v${this.newVersion} completed successfully!`, 'success')
       this.log("Don't forget to push your changes and tags:", 'info')
