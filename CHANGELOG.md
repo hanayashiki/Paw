@@ -1,3 +1,6 @@
+## 1.1.1
+fix: use execa to smooth release script
+
 ## 1.1.0
 tray icon naming and color for dark/light mode
 
