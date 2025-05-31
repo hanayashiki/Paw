@@ -250,8 +250,7 @@ class ReleaseManager {
 
       this.log(`🎉 Release v${this.newVersion} completed successfully!`, 'success')
       this.log("Don't forget to push your changes and tags:", 'info')
-      this.log('  git push origin main', 'info')
-      this.log(`  git push origin v${this.newVersion}`, 'info')
+      this.log('  git push --follow-tags', 'info')
     } catch (error) {
       this.log(`Release failed: ${error}`, 'error')
       process.exit(1)

@@ -36,5 +36,10 @@ $ npm run build:linux
 ### Release
 
 ```bash
-pnpm commit
+$ npm run release
+
+[INFO] 🚀 Starting release process...
+[INFO] Current version: 1.0.6
+Enter new version (e.g., 1.0.4): 1.0.7
+Enter release information (what changed?): Allow repositioning the window with menu click
 ```
