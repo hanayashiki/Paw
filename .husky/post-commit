@@ -9,7 +9,7 @@ export AWS_PROFILE=wcy
 # Only run for regular commits (not merges, rebases, etc.)
 
 # Check if package.json is staged for commit
-if git diff --cached --name-only | grep -q "package.json"; then
+if git diff HEAD^ --cached --name-only | grep -q "package.json"; then
   # Get the current version from package.json
   CURRENT_VERSION=$(node -p "require('./package.json').version")
   
